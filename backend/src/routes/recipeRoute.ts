@@ -9,6 +9,8 @@ router.post("/new", async (req: Request, res: Response, next: NextFunction) => {
         const repository = await getRecipeRepository();
         const recipe = new Recipe();
 
+        // generate id automatically?
+
         recipe.name = req.body.name;
         recipe.description = req.body.description;
         recipe.ingredientsId = req.body.ingredientsId;
@@ -27,7 +29,7 @@ router.post("/new", async (req: Request, res: Response, next: NextFunction) => {
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const repository = await getRecipeRepository();
-        const allRecipes = await repository.find(); // QUESTION: is this like repositories in spring boot where it comes with methods you can call, e.g. "find"?
+        const allRecipes = await repository.find();
         res.send(allRecipes);
     } catch (err) {
         return next(err);
@@ -46,5 +48,38 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 // edit recipe
+router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const repository = await getRecipeRepository();
+        let recipe: Recipe = await repository.findOne({ id: req.params.id });
+
+        recipe.name = req.body.name;
+        recipe.description = req.body.description;
+        recipe.ingredientsId = req.body.ingredientsId;
+        recipe.ownerId = req.body.ownerId;
+        recipe.cookTime = req.body.cookTime;
+        recipe.dateCreated = req.body.dateCreated;
+
+        const result = await repository.save(recipe);
+        res.send(result);
+    } catch (err) {
+        return next(err);
+    }
+});
 
 // delete recipe
+router.delete(
+    "/:id",
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const repository = await getRecipeRepository();
+            const result = await repository.delete(req.params.id);
+            res.send(result);
+        } catch (err) {
+            return next(err);
+        }
+    }
+);
+
+// QUESTION: REST best practices - does it matter whether we pass data through
+// the url or request body?
