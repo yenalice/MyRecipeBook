@@ -9,8 +9,6 @@ router.post("/new", async (req: Request, res: Response, next: NextFunction) => {
         const repository = await getRecipeRepository();
         const recipe = new Recipe();
 
-        // generate id automatically?
-
         recipe.name = req.body.name;
         recipe.description = req.body.description;
         recipe.ingredientsId = req.body.ingredientsId;
@@ -80,6 +78,3 @@ router.delete(
         }
     }
 );
-
-// QUESTION: REST best practices - does it matter whether we pass data through
-// the url or request body?
