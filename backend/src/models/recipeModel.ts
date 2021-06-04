@@ -18,7 +18,7 @@ export class Recipe {
     @Column()
     description: string;
 
-    @Column() // how to make this unique & auto-generated/incremented??
+    @Column() // TODO: how to make this unique & auto-generated/incremented??
     ingredientsId: number;
 
     @Column()
@@ -29,6 +29,9 @@ export class Recipe {
 
     @Column()
     dateCreated: Date;
+
+    @Column()
+    rating: number;
 }
 
 let connection: Connection;
