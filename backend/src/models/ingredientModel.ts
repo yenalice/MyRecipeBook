@@ -13,7 +13,13 @@ export class Ingredient {
     id: number;
 
     @Column()
+    recipeId: number;
+
+    @Column()
     amount: number;
+
+    @Column()
+    unit: number;
 
     @Column()
     name: string;
@@ -24,10 +30,15 @@ let connection: Connection;
 export async function getIngredientRepository(): Promise<
     Repository<Ingredient>
 > {
+    // TODO:
+    // make this neater; move into connection pool with others, use .env file, etc.
+    // delete connect.ts file, move .env into directory of connection pool file
     if (connection === undefined) {
         connection = await createConnection({
-            type: "sqlite",
-            database: "myangularapp",
+            type: "mysql",
+            username: "myrecipebook",
+            password: "yummy!!",
+            database: "myrecipebook",
             synchronize: true,
             entities: [Ingredient],
         });

@@ -27,8 +27,10 @@ let connection: Connection;
 export async function getUserRepository(): Promise<Repository<User>> {
     if (connection === undefined) {
         connection = await createConnection({
-            type: "sqlite",
-            database: "myangularapp",
+            type: "mysql",
+            username: "myrecipebook",
+            password: "yummy!!",
+            database: "myrecipebook",
             synchronize: true,
             entities: [User],
         });
