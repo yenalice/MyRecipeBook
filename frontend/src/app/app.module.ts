@@ -10,7 +10,7 @@ import { ViewAllPageComponent } from './pages/view-all/view-all-page/view-all-pa
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { DataService } from './services/data/data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApiInterceptor } from './api-interceptor';
+import { ApiInterceptor } from './interceptors/api-interceptor';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
