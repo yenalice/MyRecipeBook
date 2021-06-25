@@ -6,9 +6,8 @@ import { ViewAllPageComponent } from './pages/view-all/view-all-page/view-all-pa
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 const routes: Routes = [
-  { path: '', component: ViewAllPageComponent },
-  /* QUESTION: is there any way to verify that some route is a recipe title and not just some random string?? */
-  { path: ':RecipeTitle', component: DetailsPageComponent },
+  { path: '', component: ViewAllPageComponent, pathMatch: 'full' },
+  { path: 'recipe/:id', component: DetailsPageComponent },
   { path: 'add', component: AddPageComponent },
   { path: '**', component: PageNotFoundComponent },
 ];

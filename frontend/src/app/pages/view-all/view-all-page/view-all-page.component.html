@@ -2,7 +2,7 @@
 <h1 class="heading">Discover Recipes!</h1>
 <div class="cards">
   <div class="card-wrapper" *ngFor="let recipe of recipes">
-    <mat-card routerLink="/{{ recipe.title }}"
+    <mat-card routerLink="/recipe/{{ recipe.id }}"
       ><mat-card-title>{{ recipe.title }}</mat-card-title
       ><img mat-card-image src="{{ recipe.imageUrl }}" />
     </mat-card>
