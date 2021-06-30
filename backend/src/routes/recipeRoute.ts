@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { getRecipeRepository, Recipe } from "../models/recipeModel";
+import { getNutrientRepository, Nutrient } from "../models/nutritientModel";
 
 export const router: Router = Router();
 
@@ -13,47 +14,28 @@ router.post(
         axios
             .get(apiPath)
             .then(async (response) => {
-                const repository = await getRecipeRepository();
+                const recipeRepo = await getRecipeRepository();
                 const r = response.data.results;
-                const recipeList: Recipe[] = [];
+                let recipeList: Recipe[] = [];
 
                 // main info
                 for (let i = 0; i < r.length; i++) {
-                    const recipe = new Recipe();
+                    let recipe = new Recipe();
                     recipe.title = r[i].title;
-                    //recipe.summary = r[i].summary;
+                    recipe.summary = r[i].summary;
                     //recipe.ownerId = r[i].ownerId;
-                    //recipe.cookTime = r[i].cookTime;
+                    recipe.cookTime = r[i].readyInMinutes;
                     //recipe.rating = r[i].rating;
                     recipe.imageUrl = r[i].image;
                     //recipe.ingredientsId = r[i].ingredients;
 
-                    // nutrition
-                    /*
-                    const nutrition = res.nutrition.nutrients;
-                    for (let i = 0; i < nutrition.length; i++) {
-                        switch (nutrition[i].title) {
-                            case "Calories":
-                                recipe.calories = nutrition[i];
-                                break;
-                            case "Carbohydrates":
-                                recipe.carbs = nutrition[i];
-                                break;
-                            case "Fat":
-                                recipe.carbs = nutrition[i];
-                                break;
-                            case "Protein":
-                                recipe.protein = nutrition[i];
-                                break;
-                            case "Sugar":
-                                recipe.sugar = nutrition[i];
-                                break;
-                        }
-                    }
-                    */
+                    // store each nutrient
+                    const resNutrient = res.nutrition.nutrients;
+                    insertNutrients(resNutrient);
+
                     recipeList.push(recipe);
                 }
-                const result = await repository.save(recipeList);
+                const result = await recipeRepo.save(recipeList);
                 res.send(result);
             })
             .catch((error) => {
@@ -142,3 +124,22 @@ router.delete(
         }
     }
 );
+
+// insert nutrient(s) to database given a nutrients json
+async function insertNutrients(resNutrient) {
+    const nutrientRepo = await getNutrientRepository();
+    let nutrientList: Nutrient[] = [];
+    for (let i = 0; i < resNutrient.length; i++) {
+        let nutrient = new Nutrient();
+        nutrient.name = resNutrient.name;
+        nutrient.amount = resNutrient.amount;
+        nutrient.unit = resNutrient.unit;
+        nutrient.percentOfDailyNeeds = resNutrient.percentOfDailyNeeds;
+
+        nutrientList.push(nutrient);
+    }
+    nutrientRepo.save(nutrientList);
+}
+
+// insert ingredient(s) to database given an ingredient(s) json
+async function insertIngredients(resIngredients) {}

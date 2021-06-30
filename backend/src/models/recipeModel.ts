@@ -26,8 +26,8 @@ export class Recipe {
     // @Column()
     // ownerId: number;
 
-    // @Column()
-    // cookTime: number; // in minutes
+    @Column()
+    cookTime: number; // in minutes
 
     @CreateDateColumn()
     dateCreated: Date;
@@ -44,17 +44,8 @@ export class Recipe {
     // @Column()
     // calories: number;
 
-    // @Column()
-    // carbs: string;
-
-    // @Column()
-    // fat: string;
-
-    // @Column()
-    // protein: string;
-
-    // @Column()
-    // sugar: string;
+    @Column()
+    nutrientsId: number;
 }
 
 let connection: Connection;
