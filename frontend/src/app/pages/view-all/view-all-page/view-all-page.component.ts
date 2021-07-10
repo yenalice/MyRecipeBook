@@ -16,8 +16,8 @@ export class ViewAllPageComponent implements OnInit {
     this.getData();
   }
 
-  async getData(): Promise<void> {
-    await this.dataService
+  getData(): void {
+    this.dataService
       .getRecipes()
       .subscribe((recipes) => (this.recipes = recipes));
   }

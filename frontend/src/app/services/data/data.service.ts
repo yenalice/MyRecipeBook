@@ -1,8 +1,10 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Recipe } from '../../models/recipe';
+import { Ingredient } from '../../models/ingredient';
+import { Instruction } from '../../models/instruction';
 
 @Injectable({
   providedIn: 'root',
@@ -10,15 +12,51 @@ import { Recipe } from '../../models/recipe';
 export class DataService {
   constructor(private http: HttpClient) {}
 
-  allRecipesPath: string = 'recipe';
-
+  // get all recipes
   getRecipes(): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(this.allRecipesPath).pipe(
-      tap((_) => console.log('Data retrieved successfully.')),
-      catchError(this.handleError<Recipe[]>('searchRecipes', []))
+    const allRecipesPath: string = 'recipe';
+    return this.http.get<Recipe[]>(allRecipesPath).pipe(
+      tap((_) => console.log('All recipes retrieved successfully.')),
+      catchError(this.handleError<Recipe[]>('getRecipes', []))
     );
   }
 
+  // get a single recipe by id
+  // QUESTION: why won't this let me return a recipe object instead of recipe array???
+  getRecipe(recipeId: number): Observable<Recipe[]> {
+    const singleRecipePath: string = `recipe/${recipeId}`;
+    return this.http.get<Recipe[]>(singleRecipePath).pipe(
+      tap((_) => console.log(`Recipe of recipeId ${recipeId} successfully.`)),
+      catchError(this.handleError<Recipe[]>('getRecipe'))
+    );
+  }
+
+  // get all ingredients for a given recipeId
+  getIngredients(recipeId: number): Observable<Ingredient[]> {
+    const recipeIngredients: string = `ingredient/${recipeId}`;
+    return this.http
+      .get<Ingredient[]>(recipeIngredients)
+      .pipe(
+        tap(
+          (_) =>
+            console.log(`Ingredients of recipeId ${recipeId} successfully.`),
+          catchError(this.handleError<Ingredient[]>('getIngredients'))
+        )
+      );
+  }
+
+  // get all instructions for a given recipeId
+  getInstructions(recipeId: number): Observable<Instruction[]> {
+    const recipeInstructions: string = `instruction/${recipeId}`;
+    return this.http.get<Instruction[]>(recipeInstructions).pipe(
+      tap((_) =>
+        console.log(`Instructions of recipeId ${recipeId} successfully.`)
+      ),
+      catchError(this.handleError<Instruction[]>('getInstructions'))
+    );
+  }
+
+  // error handler
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       // TODO: send the error to remote logging infrastructure
