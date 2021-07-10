@@ -137,48 +137,56 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 // get recipe by id
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const repository = await getRecipeRepository();
-        const recipe = await repository.find({ recipeId: req.params.id });
-        res.send(recipe);
-    } catch (err) {
-        return next(err);
-    }
-});
-
-// edit recipe
-router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const repository = await getRecipeRepository();
-        let recipe: Recipe = await repository.findOne({
-            recipeId: req.params.id,
-        });
-
-        recipe.title = req.body.title;
-        recipe.summary = req.body.summary;
-        // recipe.ownerId = req.body.ownerId;
-        // recipe.cookTime = req.body.cookTime;
-        // recipe.rating = req.body.rating;
-        recipe.imageUrl = req.body.imageUrl;
-        // recipe.ingredientsId = req.body.ingredients;
-
-        // TODO: nutrition info
-
-        const result = await repository.save(recipe);
-        res.send(result);
-    } catch (err) {
-        return next(err);
-    }
-});
-
-// delete recipe
-router.delete(
-    "/:id",
+router.get(
+    "/:recipeId",
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             const repository = await getRecipeRepository();
-            const result = await repository.delete(req.params.id);
+            const recipe = await repository.find({
+                recipeId: req.params.recipeId,
+            });
+            res.send(recipe);
+        } catch (err) {
+            return next(err);
+        }
+    }
+);
+
+// edit recipe
+router.put(
+    "/:recipeId",
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const repository = await getRecipeRepository();
+            let recipe: Recipe = await repository.findOne({
+                recipeId: req.params.recipeId,
+            });
+
+            recipe.title = req.body.title;
+            recipe.summary = req.body.summary;
+            // recipe.ownerId = req.body.ownerId;
+            // recipe.cookTime = req.body.cookTime;
+            // recipe.rating = req.body.rating;
+            recipe.imageUrl = req.body.imageUrl;
+            // recipe.ingredientsId = req.body.ingredients;
+
+            // TODO: nutrition info
+
+            const result = await repository.save(recipe);
+            res.send(result);
+        } catch (err) {
+            return next(err);
+        }
+    }
+);
+
+// delete recipe
+router.delete(
+    "/:recipeId",
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const repository = await getRecipeRepository();
+            const result = await repository.delete(req.params.recipeId);
             res.send(result);
         } catch (err) {
             return next(err);

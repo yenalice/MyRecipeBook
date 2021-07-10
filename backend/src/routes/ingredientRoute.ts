@@ -3,12 +3,18 @@ import { getIngredientRepository, Ingredient } from "../models/ingredientModel";
 
 export const router: Router = Router();
 
-// change ingredient amount #
-
-// add ingredient
-
-// get ingredient by id
-
-// edit ingredient
-
-// delete ingredient
+// get all instructions with a given recipeId, ordered by order field
+router.get(
+    "/:recipeId",
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const repository = await getIngredientRepository();
+            const instructions = await repository.find({
+                recipeId: req.params.recipeId,
+            });
+            res.send(instructions);
+        } catch (err) {
+            return next(err);
+        }
+    }
+);
