@@ -2,48 +2,47 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
+    ManyToOne,
     createConnection,
     Connection,
     Repository,
-    CreateDateColumn,
+    JoinColumn,
 } from "typeorm";
+import { Recipe } from "./recipeModel";
 
 require("dotenv").config();
 
 @Entity()
-export class Nutrient {
+export class Instruction {
     @PrimaryGeneratedColumn()
-    id: number;
+    instructionId: number;
 
-    @Column()
+    @ManyToOne(() => Recipe, (recipe) => recipe.recipeId)
+    @JoinColumn({ name: "recipeId" })
     recipeId: number;
 
     @Column()
-    name: string;
+    step: string;
 
     @Column()
-    amount: number;
-
-    @Column()
-    unit: string;
-
-    @Column()
-    percentOfDailyNeeds: number;
+    order: number;
 }
 
 let connection: Connection;
 
-// TODO: move this into module or smth????
-export async function getNutrientRepository(): Promise<Repository<Nutrient>> {
+export async function getInstructionRepository(): Promise<
+    Repository<Instruction>
+> {
     if (connection === undefined) {
         connection = await createConnection({
+            name: "instructionConnection",
             type: "mysql",
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
             synchronize: true,
-            entities: [Nutrient],
+            entities: [Instruction, Recipe],
         });
     }
-    return connection.getRepository(Nutrient);
+    return connection.getRepository(Instruction);
 }

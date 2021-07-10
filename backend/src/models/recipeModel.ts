@@ -6,14 +6,19 @@ import {
     Connection,
     Repository,
     CreateDateColumn,
+    OneToMany,
+    JoinColumn,
 } from "typeorm";
+import { Ingredient } from "./ingredientModel";
+import { Nutrient } from "./nutrientModel";
+import { Instruction } from "./instructionModel";
 
 require("dotenv").config();
 
 @Entity()
 export class Recipe {
     @PrimaryGeneratedColumn()
-    id: number;
+    recipeId: number;
 
     // TODO: in UI, enforce max length of chars for each field
     // DESIGN QUESTION: I wanted to make title, summary, etc. non-null. So I marked it as non-null in MYSQL, but then it required a default value. So does it make more sense to provide it with a default value or just put the responsibility of requiring a field onto the client side??
@@ -26,7 +31,7 @@ export class Recipe {
     // @Column()
     // ownerId: number;
 
-    @Column()
+    @Column({ nullable: true })
     cookTime: number; // in minutes
 
     @CreateDateColumn()
@@ -37,15 +42,6 @@ export class Recipe {
 
     @Column()
     imageUrl: string;
-
-    // @Column()
-    // ingredientsId: number;
-
-    // @Column()
-    // calories: number;
-
-    @Column()
-    nutrientsId: number;
 }
 
 let connection: Connection;
@@ -54,12 +50,13 @@ let connection: Connection;
 export async function getRecipeRepository(): Promise<Repository<Recipe>> {
     if (connection === undefined) {
         connection = await createConnection({
+            name: "recipeConnection",
             type: "mysql",
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
             synchronize: true,
-            entities: [Recipe],
+            entities: [Recipe, Ingredient, Nutrient, Instruction],
         });
     }
     return connection.getRepository(Recipe);

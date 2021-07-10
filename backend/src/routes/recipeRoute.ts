@@ -1,42 +1,101 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { getRecipeRepository, Recipe } from "../models/recipeModel";
-import { getNutrientRepository, Nutrient } from "../models/nutritientModel";
+import { getNutrientRepository, Nutrient } from "../models/nutrientModel";
+import { getIngredientRepository, Ingredient } from "../models/ingredientModel";
+import {
+    getInstructionRepository,
+    Instruction,
+} from "../models/instructionModel";
 
 export const router: Router = Router();
 
 // call to spoonacular api to fill database
+// TODO: put api key in dotenv
 router.post(
     "/spoonacular",
     async (req: Request, res: Response, next: NextFunction) => {
         const axios = require("axios").default;
         const apiPath =
-            "https://api.spoonacular.com/recipes/complexSearch?apiKey=98d7ccdaa03c4462afb26c5ce21a4ee8";
+            "https://api.spoonacular.com/recipes/complexSearch?apiKey=98d7ccdaa03c4462afb26c5ce21a4ee8&addRecipeNutrition=true&instructionsRequired=true";
         axios
             .get(apiPath)
             .then(async (response) => {
+                const recipesRes = response.data.results;
                 const recipeRepo = await getRecipeRepository();
-                const r = response.data.results;
+                const nutrientRepo = await getNutrientRepository();
+                const ingredientRepo = await getIngredientRepository();
+                const instructionRepo = await getInstructionRepository();
+
                 let recipeList: Recipe[] = [];
+                let nutrientList: Nutrient[] = [];
+                let ingredientList: Ingredient[] = [];
+                let instructionList: Instruction[] = [];
 
                 // main info
-                for (let i = 0; i < r.length; i++) {
+                for (let i = 0; i < recipesRes.length; i++) {
                     let recipe = new Recipe();
-                    recipe.title = r[i].title;
-                    recipe.summary = r[i].summary;
+                    recipe.title = recipesRes[i].title;
+                    recipe.summary = recipesRes[i].summary;
                     //recipe.ownerId = r[i].ownerId;
-                    recipe.cookTime = r[i].readyInMinutes;
+                    recipe.cookTime = recipesRes[i].readyInMinutes;
                     //recipe.rating = r[i].rating;
-                    recipe.imageUrl = r[i].image;
-                    //recipe.ingredientsId = r[i].ingredients;
+                    recipe.imageUrl = recipesRes[i].image;
+                    const insertedRecipe = await recipeRepo.save(recipe);
+                    recipeList.push(insertedRecipe);
 
                     // store each nutrient
-                    const resNutrient = res.nutrition.nutrients;
-                    insertNutrients(resNutrient);
+                    const nutrientsRes = recipesRes[i].nutrition.nutrients;
+                    for (let k = 0; k < nutrientsRes.length; k++) {
+                        let nutrient = new Nutrient();
+                        nutrient.recipeId = insertedRecipe.recipeId;
+                        nutrient.name = nutrientsRes[k].name;
+                        nutrient.amount = nutrientsRes[k].amount;
+                        nutrient.unit = nutrientsRes[k].unit;
+                        nutrient.percentOfDailyNeeds =
+                            nutrientsRes[k].percentOfDailyNeeds;
 
-                    recipeList.push(recipe);
+                        nutrientList.push(await nutrientRepo.save(nutrient));
+                    }
+
+                    // store each ingredient
+                    const ingredientsRes = recipesRes[i].nutrition.ingredients;
+                    for (let j = 0; j < ingredientsRes.length; j++) {
+                        let ingredient = new Ingredient();
+                        ingredient.recipeId = insertedRecipe.recipeId;
+                        ingredient.name = ingredientsRes[j].name;
+                        ingredient.amount = ingredientsRes[j].amount;
+                        ingredient.unit = ingredientsRes[j].unit;
+
+                        ingredientList.push(
+                            await ingredientRepo.save(ingredient)
+                        );
+                    }
+
+                    // TODO
+                    // figure out why using the @OneToMany on recipeModel primary key was throwing that error for entity Recipe#recipeId
+                    // figure out how to make it so i don't have to keep refreshing summary varchar length
+                    // install nodemon for angular
+
+                    // store each instruction (in order)
+                    const instructionsRes =
+                        recipesRes[i].analyzedInstructions[0].steps;
+                    for (let l = 0; l < instructionsRes.length; l++) {
+                        let instruction = new Instruction();
+                        instruction.recipeId = insertedRecipe.recipeId;
+                        instruction.step = instructionsRes[l].step;
+                        instruction.order = instructionsRes[l].number;
+
+                        instructionList.push(
+                            await instructionRepo.save(instruction)
+                        );
+                    }
                 }
-                const result = await recipeRepo.save(recipeList);
-                res.send(result);
+                res.send({
+                    recipes: recipeList,
+                    nutrients: nutrientList,
+                    ingredients: ingredientList,
+                    instructions: instructionList,
+                });
             })
             .catch((error) => {
                 return next(error);
@@ -81,7 +140,7 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const repository = await getRecipeRepository();
-        const recipe = await repository.find({ id: req.params.id });
+        const recipe = await repository.find({ recipeId: req.params.id });
         res.send(recipe);
     } catch (err) {
         return next(err);
@@ -92,7 +151,9 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const repository = await getRecipeRepository();
-        let recipe: Recipe = await repository.findOne({ id: req.params.id });
+        let recipe: Recipe = await repository.findOne({
+            recipeId: req.params.id,
+        });
 
         recipe.title = req.body.title;
         recipe.summary = req.body.summary;
@@ -126,20 +187,33 @@ router.delete(
 );
 
 // insert nutrient(s) to database given a nutrients json
-async function insertNutrients(resNutrient) {
-    const nutrientRepo = await getNutrientRepository();
+async function insertNutrients(nutrients, recipeId) {
+    const nutrientsRepo = await getNutrientRepository();
     let nutrientList: Nutrient[] = [];
-    for (let i = 0; i < resNutrient.length; i++) {
+    for (let i = 0; i < nutrients.length; i++) {
         let nutrient = new Nutrient();
-        nutrient.name = resNutrient.name;
-        nutrient.amount = resNutrient.amount;
-        nutrient.unit = resNutrient.unit;
-        nutrient.percentOfDailyNeeds = resNutrient.percentOfDailyNeeds;
+        nutrient.recipeId = recipeId;
+        nutrient.name = nutrients[i].name;
+        nutrient.amount = nutrients[i].amount;
+        nutrient.unit = nutrients[i].unit;
+        nutrient.percentOfDailyNeeds = nutrients[i].percentOfDailyNeeds;
 
         nutrientList.push(nutrient);
     }
-    nutrientRepo.save(nutrientList);
+    nutrientsRepo.save(nutrientList);
 }
 
 // insert ingredient(s) to database given an ingredient(s) json
-async function insertIngredients(resIngredients) {}
+async function insertIngredients(ingredients, recipeId) {
+    const ingredientsRepo = await getIngredientRepository();
+    for (let i = 0; i < ingredients.length; i++) {
+        let ingredient = new Ingredient();
+        ingredient.recipeId = recipeId;
+        ingredient.name = ingredients[i].name;
+        ingredient.amount = ingredients[i].amount;
+        ingredient.unit = ingredients[i].unit;
+        ingredientsRepo.save(ingredient);
+
+        // TODO: store nutrients - can't get it from res json since there is not res yet
+    }
+}
