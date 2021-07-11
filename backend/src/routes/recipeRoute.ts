@@ -49,7 +49,7 @@ router.post(
                         let nutrient = new Nutrient();
                         nutrient.recipeId = insertedRecipe.recipeId;
                         nutrient.name = nutrientsRes[k].name;
-                        nutrient.amount = nutrientsRes[k].amount;
+                        nutrient.amount = nutrientsRes[k].amount.toFixed(2);
                         nutrient.unit = nutrientsRes[k].unit;
                         nutrient.percentOfDailyNeeds =
                             nutrientsRes[k].percentOfDailyNeeds;
