@@ -4,7 +4,6 @@ import { Recipe } from 'src/app/models/recipe';
 import { Ingredient } from 'src/app/models/ingredient';
 import { Instruction } from 'src/app/models/instruction';
 import { DataService } from 'src/app/services/data/data.service';
-import { PageNotFoundComponent } from '../../page-not-found/page-not-found.component';
 
 @Component({
   selector: 'app-details-page',
@@ -15,7 +14,6 @@ export class DetailsPageComponent implements OnInit {
   recipe: Recipe[] = [];
   ingredients: Ingredient[] = [];
   instructions: Instruction[] = [];
-  formattedCookTime: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +30,6 @@ export class DetailsPageComponent implements OnInit {
 
     this.dataService.getRecipe(id).subscribe((recipe) => {
       this.recipe = recipe;
-      this.formattedCookTime = this.formatCookTime(recipe[0].cookTime);
       this.getIngredientsData(id);
       this.getInstructionsData(id);
     });
@@ -57,5 +54,16 @@ export class DetailsPageComponent implements OnInit {
     if (!minutes) return '';
     if (minutes < 60) return `${minutes} minutes`;
     return `${Math.floor(minutes / 60)} hours and ${minutes % 60} minutes`;
+  }
+
+  // format ingredient
+  formatIngredient(amount: number, unit: string, name: string) {
+    return (
+      (amount % 1 != 0 ? amount : Math.floor(amount)) +
+      ' ' +
+      (unit ? unit : '') +
+      ' ' +
+      name
+    );
   }
 }

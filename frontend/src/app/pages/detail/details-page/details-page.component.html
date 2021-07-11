@@ -1,11 +1,16 @@
-<div *ngIf="recipe && recipe[0]; else pageNotFound">
-  <!--Title, image, summary, cook time-->
+<div id="details-wrapper" *ngIf="recipe && recipe[0]; else pageNotFound">
+  <!--Title, image, sumary, & cook time-->
   <h1>{{ recipe[0].title }}</h1>
-  <img src="{{ recipe[0].imageUrl }}" />
-  <p *ngIf="recipe[0].summary" [innerHTML]="recipe[0].summary"></p>
-  <div *ngIf="formattedCookTime">
-    <h3>Cook Time</h3>
-    <p>{{ formattedCookTime }}</p>
+  <div id="img-summary-wrapper">
+    <img id="image" src="{{ recipe[0].imageUrl }}" />
+    <p
+      id="summary"
+      *ngIf="recipe[0].summary"
+      [innerHTML]="recipe[0].summary"
+    ></p>
+  </div>
+  <div id="cook-time" *ngIf="recipe[0].cookTime">
+    <h3>{{ "Cook Time: " + formatCookTime(recipe[0].cookTime) }}</h3>
   </div>
 
   <!--Ingredients-->
@@ -14,11 +19,7 @@
     <ul>
       <li *ngFor="let ingredient of ingredients">
         {{
-          ingredient.amount +
-            " " +
-            (ingredient.unit ? ingredient.unit : "") +
-            " " +
-            ingredient.name
+          formatIngredient(ingredient.amount, ingredient.unit, ingredient.name)
         }}
       </li>
     </ul>
