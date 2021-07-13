@@ -26,8 +26,23 @@ export class DataService {
   getRecipe(recipeId: number): Observable<Recipe[]> {
     const singleRecipePath: string = `recipe/${recipeId}`;
     return this.http.get<Recipe[]>(singleRecipePath).pipe(
-      tap((_) => console.log(`Recipe of recipeId ${recipeId} successfully.`)),
+      tap((_) =>
+        console.log(
+          `Recipe of recipeId ${recipeId} was retrieved successfully.`
+        )
+      ),
       catchError(this.handleError<Recipe[]>('getRecipe'))
+    );
+  }
+
+  // delete a given recipe
+  deleteRecipe(recipeId: number): Observable<Recipe> {
+    const singleRecipePath: string = `recipe/${recipeId}`;
+    return this.http.delete<Recipe>(singleRecipePath).pipe(
+      tap((_) =>
+        console.log(`Recipe of id ${recipeId} was deleted successfully.`)
+      ),
+      catchError(this.handleError<Recipe>('deleteRecipe'))
     );
   }
 
@@ -39,7 +54,9 @@ export class DataService {
       .pipe(
         tap(
           (_) =>
-            console.log(`Ingredients of recipeId ${recipeId} successfully.`),
+            console.log(
+              `Ingredients of recipeId ${recipeId} were retrieved successfully.`
+            ),
           catchError(this.handleError<Ingredient[]>('getIngredients'))
         )
       );
@@ -50,7 +67,9 @@ export class DataService {
     const recipeInstructions: string = `instruction/${recipeId}`;
     return this.http.get<Instruction[]>(recipeInstructions).pipe(
       tap((_) =>
-        console.log(`Instructions of recipeId ${recipeId} successfully.`)
+        console.log(
+          `Instructions of recipeId ${recipeId} were retrieved successfully.`
+        )
       ),
       catchError(this.handleError<Instruction[]>('getInstructions'))
     );

@@ -18,6 +18,17 @@ require("dotenv").config();
 @Entity()
 export class Recipe {
     @PrimaryGeneratedColumn()
+    /*
+    @OneToMany(() => Ingredient, (ingredient) => ingredient.recipeId, {
+        cascade: true,
+    })
+    @OneToMany(() => Nutrient, (nutrient) => nutrient.recipeId, {
+        cascade: true,
+    })
+    @OneToMany(() => Instruction, (instruction) => instruction.recipeId, {
+        cascade: true,
+    })
+    */
     recipeId: number;
 
     // TODO: in UI, enforce max length of chars for each field

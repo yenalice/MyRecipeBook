@@ -74,7 +74,6 @@ router.post(
                     // TODO
                     // figure out why using the @OneToMany on recipeModel primary key was throwing that error for entity Recipe#recipeId
                     // figure out how to make it so i don't have to keep refreshing summary varchar length
-                    // install nodemon for angular
 
                     // store each instruction (in order)
                     const instructionsRes =
@@ -185,8 +184,32 @@ router.delete(
     "/:recipeId",
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const repository = await getRecipeRepository();
-            const result = await repository.delete(req.params.recipeId);
+            const recipeId = req.params.recipeId;
+
+            // delete related ingredients
+            const ingredientRepo = await getIngredientRepository();
+            const ingredients = await ingredientRepo.find({
+                recipeId,
+            });
+            await ingredientRepo.remove(ingredients);
+
+            // delete related nutrients
+            const nutrientRepo = await getNutrientRepository();
+            const nutrients = await nutrientRepo.find({
+                recipeId,
+            });
+            await nutrientRepo.remove(nutrients);
+
+            // delete related instructions
+            const instructionRepo = await getInstructionRepository();
+            const instructions = await instructionRepo.find({
+                recipeId,
+            });
+            await instructionRepo.remove(instructions);
+
+            // delete recipe
+            const recipeRepo = await getRecipeRepository();
+            const result = await recipeRepo.delete(recipeId);
             res.send(result);
         } catch (err) {
             return next(err);

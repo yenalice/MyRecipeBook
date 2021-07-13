@@ -3,7 +3,16 @@
 <div class="cards">
   <div class="card-wrapper" *ngFor="let recipe of recipes">
     <mat-card routerLink="/recipe/{{ recipe.recipeId }}">
-      <mat-card-title>{{ recipe.title }}</mat-card-title>
+      <div class="card-title-wrapper">
+        <mat-card-title>{{ recipe.title }}</mat-card-title>
+        <button
+          mat-icon-button
+          class="delete-button"
+          (click)="onDelete($event, recipe.recipeId)"
+        >
+          <fa-icon [icon]="faTrashAlt"></fa-icon>
+        </button>
+      </div>
       <img mat-card-image src="{{ recipe.imageUrl }}" />
     </mat-card>
   </div>
