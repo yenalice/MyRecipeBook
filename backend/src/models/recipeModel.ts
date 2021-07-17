@@ -18,6 +18,7 @@ require("dotenv").config();
 @Entity()
 export class Recipe {
     @PrimaryGeneratedColumn()
+
     /*
     @OneToMany(() => Ingredient, (ingredient) => ingredient.recipeId, {
         cascade: true,

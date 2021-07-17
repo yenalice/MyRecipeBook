@@ -10,6 +10,7 @@ import { AddPageComponent } from './pages/add/add-page/add-page.component';
 import { DetailsPageComponent } from './pages/detail/details-page/details-page.component';
 import { ViewAllPageComponent } from './pages/view-all/view-all-page/view-all-page.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { NavbarComponent } from './pages/navbar/navbar.component';
 
 // services
 import { DataService } from './services/data/data.service';
@@ -19,6 +20,7 @@ import { ApiInterceptor } from './interceptors/api-interceptor';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import {
   MatDialogModule,
   MAT_DIALOG_DEFAULT_OPTIONS,
@@ -34,6 +36,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     DetailsPageComponent,
     ViewAllPageComponent,
     PageNotFoundComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +46,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatCardModule,
     MatButtonModule,
     MatToolbarModule,
+    MatSidenavModule,
     MatDialogModule,
     FontAwesomeModule,
   ],
