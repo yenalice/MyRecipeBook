@@ -1,7 +1,10 @@
 <mat-sidenav-container>
+  <!--TODO: organize sidenav into separate component-->
   <mat-sidenav #sidenav mode="side">
-    <div>uwu</div>
-    <div>owo</div>
+    <div class="link-wrapper"><a routerLink="">Explore</a></div>
+    <div class="link-wrapper">
+      <a routerLink="/:user/favorites">Favorites</a>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-navbar (openNav)="sidenav.toggle()"></app-navbar>
