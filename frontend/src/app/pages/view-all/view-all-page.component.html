@@ -1,0 +1,27 @@
+<!--QUESTION: what is the best way to ensure that all cards are equal sizes & pretty?? for reference: broccoli & chickpea rice salad vs the one next to it-->
+<div class="wrapper">
+  <h1 class="heading">Discover Recipes</h1>
+  <div class="add-button-wrapper">
+    <button mat-icon-button class="add-button" routerLink="recipe/add">
+      <fa-icon [icon]="faPlusCircle" size="2x"></fa-icon>
+    </button>
+    <h3>Add your own recipe!</h3>
+  </div>
+  <div class="cards">
+    <div class="card-wrapper" *ngFor="let recipe of recipes">
+      <mat-card routerLink="/recipe/{{ recipe.recipeId }}">
+        <div class="card-title-wrapper">
+          <mat-card-title>{{ recipe.title }}</mat-card-title>
+          <button
+            mat-icon-button
+            class="delete-button"
+            (click)="onDelete($event, recipe.recipeId)"
+          >
+            <fa-icon [icon]="faTrashAlt"></fa-icon>
+          </button>
+        </div>
+        <img mat-card-image src="{{ recipe.imageUrl }}" />
+      </mat-card>
+    </div>
+  </div>
+</div>

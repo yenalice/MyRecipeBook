@@ -1,0 +1,109 @@
+<div class="wrapper">
+  <form>
+    <h1>Add Your Recipe</h1>
+
+    <!--title-->
+    <div class="form-item">
+      <label>Title</label>
+      <mat-form-field appearance="fill">
+        <input
+          matInput
+          placeholder="Give your recipe a name"
+          (change)="onTitleChange($event)"
+          [formControl]="titleControl"
+        />
+        <mat-error *ngIf="titleControl.hasError('required')"
+          >Title is required</mat-error
+        >
+        <mat-error *ngIf="titleControl.hasError('maxlength')"
+          >Title must be no more than 150 characters</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <!--summary-->
+    <div class="form-item">
+      <label>Summary</label>
+      <mat-form-field appearance="fill">
+        <textarea
+          matInput
+          placeholder="Describe your recipe"
+          (change)="onSummaryChange($event)"
+          [formControl]="summaryControl"
+        ></textarea>
+        <mat-error *ngIf="summary && summaryControl.hasError('maxlength')"
+          >Summary must be no more than 350 characters</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <!--cook time-->
+    <div class="form-item">
+      <label>Cook Time</label>
+      <div id="cooktime-container">
+        <div id="hours">
+          <mat-form-field appearance="fill">
+            <mat-label>Hours</mat-label>
+            <input
+              matInput
+              (change)="onHoursChange($event)"
+              [formControl]="hoursControl"
+            />
+            <mat-error *ngIf="hours && hoursControl.hasError('pattern')"
+              >Hours must be a number</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div id="minutes">
+          <mat-form-field appearance="fill">
+            <mat-label>Minutes</mat-label>
+            <input
+              matInput
+              (change)="onMinutesChange($event)"
+              [formControl]="minutesControl"
+            />
+            <mat-error *ngIf="minutes && minutesControl.hasError('pattern')"
+              >Minutes must be a number</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!--image url-->
+    <div class="form-item">
+      <label>Image URL</label>
+      <mat-form-field appearance="fill">
+        <input
+          matInput
+          placeholder="Provide a picture of your recipe"
+          (change)="onImageUrlChange($event)"
+          [formControl]="imageUrlControl"
+        />
+        <mat-error *ngIf="imageUrl && imageUrlControl.hasError('pattern')"
+          >Must be a valid URL</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <br />
+
+    <!--submit button-->
+    <button mat-raised-button color="primary" (click)="onSubmit($event)">
+      Submit
+    </button>
+  </form>
+</div>
+
+<!--TODO: Format dialog-->
+<!--dialog-->
+<ng-template #errorDialog>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close class="close-button">
+      <fa-icon [icon]="faWindowClose"></fa-icon>
+    </button>
+  </mat-dialog-actions>
+  <h2 mat-dialog-title>Errors Found</h2>
+  <mat-dialog-content
+    >Fix errors before resubmitting recipe.</mat-dialog-content
+  >
+</ng-template>

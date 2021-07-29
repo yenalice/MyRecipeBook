@@ -3,12 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // components
 import { AppComponent } from './app.component';
-import { AddPageComponent } from './pages/add/add-page/add-page.component';
-import { DetailsPageComponent } from './pages/detail/details-page/details-page.component';
-import { ViewAllPageComponent } from './pages/view-all/view-all-page/view-all-page.component';
+import { AddPageComponent } from './pages/add/add-page.component';
+import { DetailsPageComponent } from './pages/detail/details-page.component';
+import { ViewAllPageComponent } from './pages/view-all/view-all-page.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { NavbarComponent } from './pages/navbar/navbar.component';
 
@@ -21,6 +22,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import {
   MatDialogModule,
   MAT_DIALOG_DEFAULT_OPTIONS,
@@ -43,10 +46,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatToolbarModule,
     MatSidenavModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatDialogModule,
     FontAwesomeModule,
   ],

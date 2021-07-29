@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../../services/data/data.service';
-import { Recipe } from '../../../models/recipe';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { ConfirmDeleteComponent } from './../../confirm-delete/confirm-delete.component';
+import { DataService } from './../../services/data/data.service';
+import { Recipe } from './../../models/recipe';
+import { faTrashAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { ConfirmDeleteComponent } from './../confirm-delete/confirm-delete.component';
 
 @Component({
   selector: 'app-view-all-page',
@@ -12,6 +12,7 @@ import { ConfirmDeleteComponent } from './../../confirm-delete/confirm-delete.co
 export class ViewAllPageComponent implements OnInit {
   recipes: Recipe[] = [];
   faTrashAlt = faTrashAlt;
+  faPlusCircle = faPlusCircle;
 
   constructor(private dataService: DataService) {}
 
