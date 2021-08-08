@@ -14,20 +14,20 @@ require("dotenv").config();
 
 @Entity()
 export class Ingredient {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: "int" })
     ingredientId: number;
 
     @ManyToOne((type) => Recipe, (recipe) => recipe.recipeId)
     @JoinColumn({ name: "recipeId", referencedColumnName: "recipeId" })
     recipeId: number;
 
-    @Column()
+    @Column({ type: "varchar", length: 350 })
     name: string;
 
-    @Column()
+    @Column({ type: "decimal", precision: 10, scale: 2 })
     amount: number;
 
-    @Column()
+    @Column({ type: "varchar", length: 50 })
     unit: string;
 }
 

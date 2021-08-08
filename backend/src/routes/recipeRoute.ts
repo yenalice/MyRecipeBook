@@ -105,20 +105,34 @@ router.post(
 // add recipe
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const repository = await getRecipeRepository();
+        // insert recipe
+        const recipeRepository = await getRecipeRepository();
         const recipe = new Recipe();
         recipe.title = req.body.title;
         recipe.summary = req.body.summary;
         // recipe.ownerId = req.body.ownerId;
-        // recipe.cookTime = req.body.cookTime;
+        recipe.cookTime = req.body.cookTime;
         // recipe.rating = req.body.rating;
-        recipe.imageUrl = req.body.image; // change to imageUrl
-        // recipe.ingredientsId = req.body.ingredients;
+        recipe.imageUrl = req.body.imageUrl; // change to imageUrl
+        const newRecipe = await recipeRepository.save(recipe);
 
-        // TODO: nutrition info
+        // insert ingredients
+        const ingredients = insertIngredients(
+            req.body.ingredients,
+            newRecipe.recipeId
+        );
 
-        const result = await repository.save(recipe);
-        res.send(result);
+        // insert instructions
+        const instructions = insertInstructions(
+            req.body.instructions,
+            newRecipe.recipeId
+        );
+
+        res.send({
+            recipe: newRecipe,
+            ingredients: ingredients,
+            instructions: instructions,
+        });
     } catch (err) {
         return next(err);
     }
@@ -164,7 +178,7 @@ router.put(
             recipe.title = req.body.title;
             recipe.summary = req.body.summary;
             // recipe.ownerId = req.body.ownerId;
-            // recipe.cookTime = req.body.cookTime;
+            recipe.cookTime = req.body.cookTime;
             // recipe.rating = req.body.rating;
             recipe.imageUrl = req.body.imageUrl;
             // recipe.ingredientsId = req.body.ingredients;
@@ -237,14 +251,31 @@ async function insertNutrients(nutrients, recipeId) {
 // insert ingredient(s) to database given an ingredient(s) json
 async function insertIngredients(ingredients, recipeId) {
     const ingredientsRepo = await getIngredientRepository();
+    const ingredientList: Ingredient[] = [];
+
     for (let i = 0; i < ingredients.length; i++) {
         let ingredient = new Ingredient();
         ingredient.recipeId = recipeId;
         ingredient.name = ingredients[i].name;
         ingredient.amount = ingredients[i].amount;
         ingredient.unit = ingredients[i].unit;
-        ingredientsRepo.save(ingredient);
-
-        // TODO: store nutrients - can't get it from res json since there is not res yet
+        ingredientList.push(ingredient);
     }
+    const result = ingredientsRepo.save(ingredientList);
+    return result;
+}
+
+// insert instruction(s) to database given an ingredient(s) json
+async function insertInstructions(instructions, recipeId) {
+    const instructionRepo = await getInstructionRepository();
+    const instructionList: Instruction[] = [];
+
+    for (let i = 0; i < instructions.length; i++) {
+        let instruction = new Instruction();
+        instruction.recipeId = recipeId;
+        instruction.step = instructions[i].step;
+        instruction.order = instructions[i].order;
+        instructionList.push(instruction);
+    }
+    instructionRepo.save(instructionList);
 }

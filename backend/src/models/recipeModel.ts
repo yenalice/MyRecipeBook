@@ -17,7 +17,7 @@ require("dotenv").config();
 
 @Entity()
 export class Recipe {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: "int" })
 
     /*
     @OneToMany(() => Ingredient, (ingredient) => ingredient.recipeId, {
@@ -34,25 +34,25 @@ export class Recipe {
 
     // TODO: in UI, enforce max length of chars for each field
     // DESIGN QUESTION: I wanted to make title, summary, etc. non-null. So I marked it as non-null in MYSQL, but then it required a default value. So does it make more sense to provide it with a default value or just put the responsibility of requiring a field onto the client side??
-    @Column()
+    @Column({ type: "varchar", length: 500 })
     title: string;
 
-    @Column({ nullable: true })
+    @Column({ type: "varchar", length: 3000, nullable: true })
     summary: string;
 
     // @Column()
     // ownerId: number;
 
-    @Column({ nullable: true })
+    @Column({ type: "int", nullable: true })
     cookTime: number; // in minutes
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "datetime" })
     dateCreated: Date;
 
     // @Column()
     // rating: number;
 
-    @Column()
+    @Column({ type: "varchar", length: 1000 })
     imageUrl: string;
 }
 

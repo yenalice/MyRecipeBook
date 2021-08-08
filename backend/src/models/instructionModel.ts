@@ -14,17 +14,17 @@ require("dotenv").config();
 
 @Entity()
 export class Instruction {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: "int" })
     instructionId: number;
 
     @ManyToOne(() => Recipe, (recipe) => recipe.recipeId)
     @JoinColumn({ name: "recipeId" })
     recipeId: number;
 
-    @Column()
+    @Column({ type: "varchar", length: 3000 })
     step: string;
 
-    @Column()
+    @Column({ type: "int" })
     order: number;
 }
 
