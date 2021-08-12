@@ -10,7 +10,9 @@
     ></p>
   </div>
   <div id="cook-time" *ngIf="recipe[0].cookTime">
-    <h3>{{ "Cook Time: " + formatCookTime(recipe[0].cookTime) }}</h3>
+    <h3 *ngIf="recipe[0].cookTime > 0">
+      {{ "Cook Time: " + formatCookTime(recipe[0].cookTime) }}
+    </h3>
   </div>
 
   <!--Ingredients-->

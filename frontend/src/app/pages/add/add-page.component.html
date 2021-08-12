@@ -1,98 +1,180 @@
 <div class="wrapper">
-  <form>
-    <h1>Add Your Recipe</h1>
-
-    <!--title-->
-    <div class="form-item">
-      <label>Title</label>
-      <mat-form-field appearance="fill">
-        <input
-          matInput
-          placeholder="Give your recipe a name"
-          (change)="onTitleChange($event)"
-          [formControl]="titleControl"
-        />
-        <mat-error *ngIf="titleControl.hasError('required')"
-          >Title is required</mat-error
-        >
-        <mat-error *ngIf="titleControl.hasError('maxlength')"
-          >Title must be no more than 150 characters</mat-error
-        >
-      </mat-form-field>
-    </div>
-
-    <!--summary-->
-    <div class="form-item">
-      <label>Summary</label>
-      <mat-form-field appearance="fill">
-        <textarea
-          matInput
-          placeholder="Describe your recipe"
-          (change)="onSummaryChange($event)"
-          [formControl]="summaryControl"
-        ></textarea>
-        <mat-error *ngIf="summary && summaryControl.hasError('maxlength')"
-          >Summary must be no more than 350 characters</mat-error
-        >
-      </mat-form-field>
-    </div>
-
-    <!--cook time-->
-    <div class="form-item">
-      <label>Cook Time</label>
-      <div id="cooktime-container">
-        <div id="hours">
+  <h1>Add Your Recipe</h1>
+  <mat-horizontal-stepper linear>
+    <!--First Form Group-->
+    <mat-step [stepControl]="infoGroup">
+      <form [formGroup]="infoGroup">
+        <!--title-->
+        <div class="form-item">
+          <label>Title</label>
           <mat-form-field appearance="fill">
-            <mat-label>Hours</mat-label>
             <input
               matInput
-              (change)="onHoursChange($event)"
-              [formControl]="hoursControl"
+              placeholder="Give your recipe a name"
+              (change)="onTitleChange($event)"
+              [formControl]="titleControl"
             />
-            <mat-error *ngIf="hours && hoursControl.hasError('pattern')"
-              >Hours must be a number</mat-error
+            <mat-error *ngIf="titleControl.hasError('required')"
+              >Title is required</mat-error
+            >
+            <mat-error *ngIf="titleControl.hasError('maxlength')"
+              >Title must be no more than 150 characters</mat-error
             >
           </mat-form-field>
         </div>
-        <div id="minutes">
+
+        <!--summary-->
+        <div class="form-item">
+          <label>Summary</label>
           <mat-form-field appearance="fill">
-            <mat-label>Minutes</mat-label>
-            <input
+            <textarea
               matInput
-              (change)="onMinutesChange($event)"
-              [formControl]="minutesControl"
-            />
-            <mat-error *ngIf="minutes && minutesControl.hasError('pattern')"
-              >Minutes must be a number</mat-error
+              placeholder="Describe your recipe"
+              (change)="onSummaryChange($event)"
+              [formControl]="summaryControl"
+            ></textarea>
+            <mat-error *ngIf="summary && summaryControl.hasError('maxlength')"
+              >Summary must be no more than 350 characters</mat-error
             >
           </mat-form-field>
         </div>
-      </div>
-    </div>
 
-    <!--image url-->
-    <div class="form-item">
-      <label>Image URL</label>
-      <mat-form-field appearance="fill">
-        <input
-          matInput
-          placeholder="Provide a picture of your recipe"
-          (change)="onImageUrlChange($event)"
-          [formControl]="imageUrlControl"
-        />
-        <mat-error *ngIf="imageUrl && imageUrlControl.hasError('pattern')"
-          >Must be a valid URL</mat-error
-        >
-      </mat-form-field>
-    </div>
-    <br />
+        <!--cook time-->
+        <div class="form-item">
+          <label>Cook Time</label>
+          <div id="cooktime-container">
+            <div id="hours">
+              <mat-form-field appearance="fill">
+                <mat-label>Hours</mat-label>
+                <input
+                  matInput
+                  (change)="onHoursChange($event)"
+                  [formControl]="hoursControl"
+                />
+                <mat-error *ngIf="hours && hoursControl.hasError('pattern')"
+                  >Hours must be a number</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div id="minutes">
+              <mat-form-field appearance="fill">
+                <mat-label>Minutes</mat-label>
+                <input
+                  matInput
+                  (change)="onMinutesChange($event)"
+                  [formControl]="minutesControl"
+                />
+                <mat-error *ngIf="minutes && minutesControl.hasError('pattern')"
+                  >Minutes must be a number</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
 
-    <!--submit button-->
-    <button mat-raised-button color="primary" (click)="onSubmit($event)">
-      Submit
-    </button>
-  </form>
+        <!--image url-->
+        <div class="form-item">
+          <label>Image URL</label>
+          <mat-form-field appearance="fill">
+            <input
+              matInput
+              placeholder="Provide a picture of your recipe"
+              (change)="onImageUrlChange($event)"
+              [formControl]="imageUrlControl"
+            />
+            <mat-error *ngIf="imageUrl && imageUrlControl.hasError('pattern')"
+              >Must be a valid URL</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--Second Form Group-->
+    <mat-step [stepControl]="ingredientsGroup">
+      <form [formGroup]="ingredientsGroup">
+        <!--ingredients-->
+        <div class="form-item">
+          <label>Ingredients</label>
+          <div *ngFor="let ingredient of ingredients; index as i">
+            <ng-container
+              [ngTemplateOutlet]="ingredientField"
+              [ngTemplateOutletContext]="{ i: i }"
+            ></ng-container>
+          </div>
+          <button mat-icon-button (click)="addIngredientField()">
+            <span>
+              <fa-icon [icon]="faPlusCircle"></fa-icon>
+              Add Ingredients
+            </span>
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--Third Form Group-->
+    <mat-step [stepControl]="instructionsGroup">
+      <form [formGroup]="instructionsGroup">
+        <!--instructions-->
+        <div class="form-item">
+          <label>Instructions</label>
+          <ol>
+            <li *ngFor="let instruction of instructions; index as i">
+              <ng-container
+                [ngTemplateOutlet]="instructionField"
+                [ngTemplateOutletContext]="{ i: i }"
+              ></ng-container>
+            </li>
+          </ol>
+          <button mat-icon-button (click)="addInstructionField()">
+            <span>
+              <fa-icon [icon]="faPlusCircle"></fa-icon>
+              Add Instructions
+            </span>
+          </button>
+        </div>
+
+        <!--submit button-->
+        <br />
+        <button mat-raised-button color="primary" (click)="onSubmit($event)">
+          Submit
+        </button>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
 </div>
+
+<!--ingredient field template-->
+<ng-template #ingredientField let-i="i" class="ingredient">
+  <!--amount-->
+  <mat-form-field appearance="fill">
+    <mat-label>Amount</mat-label>
+    <input matInput (change)="onIngredientAmountChange($event, i)" />
+  </mat-form-field>
+  <!--unit-->
+  <mat-form-field class="ingredient-unit" appearance="fill">
+    <mat-label>Unit</mat-label>
+    <input matInput (change)="onIngredientUnitChange($event, i)" />
+  </mat-form-field>
+  <!--name-->
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput (change)="onIngredientNameChange($event, i)" />
+  </mat-form-field>
+  <button mat-icon-button>
+    <fa-icon [icon]="faMinusCircle" (click)="onRemoveIngredient(i)"></fa-icon>
+  </button>
+</ng-template>
+
+<!--instruction field template-->
+<ng-template #instructionField let-i="i" class="instruction">
+  <mat-form-field class="instruction-field" appearance="fill">
+    <input matInput (change)="onInstructionStepChange($event, i)" />
+  </mat-form-field>
+  <button mat-icon-button>
+    <fa-icon [icon]="faMinusCircle" (click)="onRemoveInstruction(i)"></fa-icon>
+  </button>
+</ng-template>
 
 <!--TODO: Format dialog-->
 <!--dialog-->
@@ -103,7 +185,5 @@
     </button>
   </mat-dialog-actions>
   <h2 mat-dialog-title>Errors Found</h2>
-  <mat-dialog-content
-    >Fix errors before resubmitting recipe.</mat-dialog-content
-  >
+  <mat-dialog-content>Fix errors before proceeding.</mat-dialog-content>
 </ng-template>

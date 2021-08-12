@@ -24,6 +24,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatStepperModule } from '@angular/material/stepper';
 import {
   MatDialogModule,
   MAT_DIALOG_DEFAULT_OPTIONS,
@@ -54,6 +55,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatSidenavModule,
     MatFormFieldModule,
     MatInputModule,
+    MatStepperModule,
     MatDialogModule,
     FontAwesomeModule,
   ],

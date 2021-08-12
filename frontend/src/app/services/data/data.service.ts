@@ -35,6 +35,14 @@ export class DataService {
     );
   }
 
+  addRecipe(recipe: Recipe): Observable<Recipe[]> {
+    const addRecipePath: string = `recipe`;
+    return this.http.post<Recipe[]>(addRecipePath, recipe).pipe(
+      tap((_) => console.log('Recipe added successfully.')),
+      catchError(this.handleError<Recipe[]>('addRecipe'))
+    );
+  }
+
   // delete a given recipe
   deleteRecipe(recipeId: number): Observable<Recipe> {
     const singleRecipePath: string = `recipe/${recipeId}`;
