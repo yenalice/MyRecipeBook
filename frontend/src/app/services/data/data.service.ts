@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Recipe } from '../../models/recipe';
 import { Ingredient } from '../../models/ingredient';
 import { Instruction } from '../../models/instruction';
+import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class DataService {
     );
   }
 
+  // add recipe
   addRecipe(recipe: Recipe): Observable<Recipe[]> {
     const addRecipePath: string = `recipe`;
     return this.http.post<Recipe[]>(addRecipePath, recipe).pipe(
@@ -80,6 +82,38 @@ export class DataService {
         )
       ),
       catchError(this.handleError<Instruction[]>('getInstructions'))
+    );
+  }
+
+  // add user
+  addUser(user: User) {
+    const addUserPath: string = `user`;
+    return this.http.post<User[]>(addUserPath, user).pipe(
+      tap((_) => console.log('User added successfully.')),
+      catchError(this.handleError<User[]>('addUser'))
+    );
+  }
+
+  // get user given userId
+  getUser(userId: number): Observable<User[]> {
+    const userPath: string = `user/${userId}`;
+    return this.http.get<User[]>(userPath).pipe(
+      tap((_) =>
+        console.log(`Users of userId ${userId} was retrieved successfully.`)
+      ),
+      catchError(this.handleError<User[]>('getUser'))
+    );
+  }
+
+  // validate user
+  validateUser(username: string, password: string): Observable<any> {
+    const userPath: string = `user/login`;
+    const reqBody = { username: username, password: password };
+    return this.http.post<any>(userPath, reqBody).pipe(
+      tap((_) =>
+        console.log(`Validation result for user was retrieved successfully.`)
+      ),
+      catchError(this.handleError<any>('getValidation'))
     );
   }
 

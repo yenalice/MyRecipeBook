@@ -1,6 +1,7 @@
 import {
     Entity,
     PrimaryGeneratedColumn,
+    CreateDateColumn,
     Column,
     createConnection,
     Connection,
@@ -9,16 +10,19 @@ import {
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn({ type: "int" })
+    userId: number;
 
-    @Column()
+    @Column({ type: "varchar", length: 254 })
+    email: string;
+
+    @Column({ type: "varchar", length: 30 })
     username: string;
 
-    @Column() // TODO: find out how to store safely :)
+    @Column({ type: "varchar", length: 30 }) // TODO: find out how to store safely :)
     password: string;
 
-    @Column()
+    @CreateDateColumn({ type: "datetime" })
     dateCreated: Date;
 }
 

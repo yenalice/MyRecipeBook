@@ -52,8 +52,6 @@ export class ViewAllPageComponent implements OnInit {
 
   // call to data service to delete data
   deleteData(recipeId: number): void {
-    this.dataService
-      .deleteRecipe(recipeId)
-      .subscribe((recipe) => this.getData());
+    this.dataService.deleteRecipe(recipeId).subscribe(() => this.getData());
   }
 }

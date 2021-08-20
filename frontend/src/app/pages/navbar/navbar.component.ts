@@ -1,5 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { faBars, faUser } from '@fortawesome/free-solid-svg-icons';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-navbar',
@@ -8,9 +11,24 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 })
 export class NavbarComponent implements OnInit {
   faBars = faBars;
+  faUser = faUser;
+  currUser?: User;
   @Output() openNav = new EventEmitter();
 
-  constructor() {}
+  constructor(private cookieService: CookieService, private router: Router) {
+    this.currUser = JSON.parse(cookieService.get('User'));
+  }
 
   ngOnInit(): void {}
+
+  // redirect to user page
+  navigateToUserPage() {
+    this.router.navigateByUrl(`/user/${this.cookieService.get('User')}`);
+  }
+
+  // log user out
+  logout(): void {
+    this.cookieService.delete('User');
+    this.router.navigateByUrl('/');
+  }
 }

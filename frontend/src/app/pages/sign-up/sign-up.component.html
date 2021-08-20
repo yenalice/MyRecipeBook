@@ -1,0 +1,41 @@
+<form id="wrapper" (ngSubmit)="onSubmit(username, password)">
+  <div id="form-wrapper">
+    <mat-form-field class="margin-bottom" appearance="fill">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        (change)="setEmail($event)"
+        [formControl]="emailControl"
+      />
+      <mat-error *ngIf="emailControl.hasError('required')"
+        >Email is required</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field class="margin-bottom" appearance="fill">
+      <mat-label>Username</mat-label>
+      <input
+        matInput
+        (change)="setUsername($event)"
+        [formControl]="usernameControl"
+      />
+      <mat-error *ngIf="usernameControl.hasError('required')"
+        >Username is required</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field class="margin-bottom" appearance="fill">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        (change)="setPassword($event)"
+        [formControl]="passwordControl"
+      />
+      <mat-error *ngIf="passwordControl.hasError('required')"
+        >Password is required</mat-error
+      >
+    </mat-form-field>
+    <p class="margin-bottom">
+      Already have an account? <a routerLink="/login">Log in</a>!
+    </p>
+  </div>
+  <button mat-raised-button>Submit</button>
+</form>

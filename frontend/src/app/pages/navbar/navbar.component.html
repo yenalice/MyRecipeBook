@@ -1,21 +1,24 @@
-<mat-toolbar>
-  <button mat-icon-button (click)="openNav.emit()">
+<mat-toolbar id="nav-content">
+  <button id="sidenav-btn" mat-icon-button (click)="openNav.emit()">
     <fa-icon [icon]="faBars"></fa-icon>
   </button>
-  <span>My Recipe Book</span>
+  <h1 id="webpage-name">My Recipe Book</h1>
+  <button
+    mat-fab
+    [matMenuTriggerFor]="menu"
+    class="login-user"
+    *ngIf="currUser; else login"
+  >
+    <fa-icon [icon]="faUser"></fa-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="navigateToUserPage()">
+      {{ currUser!.username }}
+    </button>
+    <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
 </mat-toolbar>
 
-<!--
-<nav>
-  <ul ngbNav #nav="ngbNav" class="nav-tabs">
-    <li ngbNavItem>
-      <a ngbNavLink>Home</a>
-      <ng-template ngbNavContent>First content</ng-template>
-    </li>
-    <li ngbNavItem>
-      <a ngbNavLink>My Recipes</a>
-      <ng-template ngbNavContent>Second content</ng-template>
-    </li>
-  </ul>
-</nav>
--->
+<ng-template #login
+  ><a routerLink="/login" class="login-user">Login</a></ng-template
+>
