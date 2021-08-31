@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { User } from './models/user';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -8,9 +9,10 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AppComponent {
   title = 'MyRecipeBook';
-  currUser?: string;
+  currUser?: User;
 
   constructor(private cookieService: CookieService) {
-    this.currUser = this.cookieService.get('UserId');
+    if (cookieService.get('User'))
+      this.currUser = JSON.parse(cookieService.get('User'));
   }
 }

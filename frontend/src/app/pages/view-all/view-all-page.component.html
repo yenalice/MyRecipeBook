@@ -7,21 +7,8 @@
     </button>
     <h3>Add your own recipe!</h3>
   </div>
-  <div class="cards">
-    <div class="card-wrapper" *ngFor="let recipe of recipes">
-      <mat-card routerLink="/recipe/{{ recipe.recipeId }}">
-        <div class="card-title-wrapper">
-          <mat-card-title>{{ recipe.title }}</mat-card-title>
-          <button
-            mat-icon-button
-            class="delete-button"
-            (click)="onDelete($event, recipe.recipeId)"
-          >
-            <fa-icon [icon]="faTrashAlt"></fa-icon>
-          </button>
-        </div>
-        <img mat-card-image src="{{ recipe.imageUrl }}" />
-      </mat-card>
-    </div>
-  </div>
+  <app-list-view
+    [recipes]="recipes"
+    (refreshRecipes)="getAllRecipes()"
+  ></app-list-view>
 </div>

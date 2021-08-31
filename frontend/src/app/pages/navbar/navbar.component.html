@@ -12,10 +12,12 @@
     <fa-icon [icon]="faUser"></fa-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="navigateToUserPage()">
-      {{ currUser!.username }}
-    </button>
-    <button mat-menu-item (click)="logout()">Logout</button>
+    <div *ngIf="currUser; else login">
+      <button mat-menu-item (click)="navigateToUserPage()">
+        {{ currUser.username }}
+      </button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </div>
   </mat-menu>
 </mat-toolbar>
 

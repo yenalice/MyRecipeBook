@@ -6,6 +6,7 @@ import { router as recipeRouter } from "./routes/recipeRoute";
 import { router as ingredientRouter } from "./routes/ingredientRoute";
 import { router as nutritionRouter } from "./routes/nutritionRoute";
 import { router as instructionRouter } from "./routes/instructionRoute";
+import { router as favoriteRouter } from "./routes/favoriteRoute";
 
 // TODO:
 // set up nodemon
@@ -18,7 +19,8 @@ const app = express()
     .use("/recipe", recipeRouter)
     .use("/ingredient", ingredientRouter)
     .use("/nutrition", nutritionRouter)
-    .use("/instruction", instructionRouter);
+    .use("/instruction", instructionRouter)
+    .use("/favorite", favoriteRouter);
 
 app.listen(4201, (err) => {
     if (err) {

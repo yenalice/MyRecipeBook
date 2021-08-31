@@ -18,3 +18,20 @@ router.get(
         }
     }
 );
+
+// insert ingredient(s) to database given an ingredient(s) json
+export async function insertIngredients(ingredients, recipeId) {
+    const ingredientsRepo = await getIngredientRepository();
+    const ingredientList: Ingredient[] = [];
+
+    for (let i = 0; i < ingredients.length; i++) {
+        let ingredient = new Ingredient();
+        ingredient.recipeId = recipeId;
+        ingredient.name = ingredients[i].name;
+        ingredient.amount = ingredients[i].amount;
+        ingredient.unit = ingredients[i].unit;
+        ingredientList.push(ingredient);
+    }
+    const result = ingredientsRepo.save(ingredientList);
+    return result;
+}

@@ -22,3 +22,18 @@ router.get(
         }
     }
 );
+
+// insert instruction(s) to database given an ingredient(s) json
+export async function insertInstructions(instructions, recipeId) {
+    const instructionRepo = await getInstructionRepository();
+    const instructionList: Instruction[] = [];
+
+    for (let i = 0; i < instructions.length; i++) {
+        let instruction = new Instruction();
+        instruction.recipeId = recipeId;
+        instruction.step = instructions[i].step;
+        instruction.order = instructions[i].order;
+        instructionList.push(instruction);
+    }
+    instructionRepo.save(instructionList);
+}

@@ -6,12 +6,18 @@ import { Recipe } from '../../models/recipe';
 import { Ingredient } from '../../models/ingredient';
 import { Instruction } from '../../models/instruction';
 import { User } from 'src/app/models/user';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  constructor(private http: HttpClient) {}
+  currUser?: User;
+
+  constructor(private http: HttpClient, private cookieService: CookieService) {
+    if (cookieService.get('User'))
+      this.currUser = JSON.parse(cookieService.get('User'));
+  }
 
   // get all recipes
   getRecipes(): Observable<Recipe[]> {
@@ -114,6 +120,29 @@ export class DataService {
         console.log(`Validation result for user was retrieved successfully.`)
       ),
       catchError(this.handleError<any>('getValidation'))
+    );
+  }
+
+  // TODO: favorite/bookmark model and use as type for arrays in these functions????
+  // add favorite/bookmark
+  addBookmark(recipeId: number) {
+    const addBookmarkPath: string = `favorite/${this.currUser?.userId}?recipe=${recipeId}`;
+    return this.http.post(addBookmarkPath, {}).pipe(
+      tap((_) => console.log('Bookmark added successfully.')),
+      catchError(this.handleError('addBookmark'))
+    );
+  }
+
+  // display all favorites/bookmarks for a user
+  getBookmarks(userId: number): Observable<Recipe[]> {
+    const getBookmarkPath: string = `favorite/${this.currUser?.userId}`;
+    return this.http.get<Recipe[]>(getBookmarkPath).pipe(
+      tap((_) =>
+        console.log(
+          `Bookmarks for user with id ${userId} was retrieved successfully.`
+        )
+      ),
+      catchError(this.handleError<Recipe[]>('getRecipe'))
     );
   }
 

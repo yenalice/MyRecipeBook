@@ -6,6 +6,9 @@ import {
     getInstructionRepository,
     Instruction,
 } from "../models/instructionModel";
+import { insertIngredients } from "./ingredientRoute";
+import { insertInstructions } from "./instructionRoute";
+import { insertNutrients } from "./nutritionRoute";
 
 export const router: Router = Router();
 
@@ -230,52 +233,3 @@ router.delete(
         }
     }
 );
-
-// insert nutrient(s) to database given a nutrients json
-async function insertNutrients(nutrients, recipeId) {
-    const nutrientsRepo = await getNutrientRepository();
-    let nutrientList: Nutrient[] = [];
-    for (let i = 0; i < nutrients.length; i++) {
-        let nutrient = new Nutrient();
-        nutrient.recipeId = recipeId;
-        nutrient.name = nutrients[i].name;
-        nutrient.amount = nutrients[i].amount;
-        nutrient.unit = nutrients[i].unit;
-        nutrient.percentOfDailyNeeds = nutrients[i].percentOfDailyNeeds;
-
-        nutrientList.push(nutrient);
-    }
-    nutrientsRepo.save(nutrientList);
-}
-
-// insert ingredient(s) to database given an ingredient(s) json
-async function insertIngredients(ingredients, recipeId) {
-    const ingredientsRepo = await getIngredientRepository();
-    const ingredientList: Ingredient[] = [];
-
-    for (let i = 0; i < ingredients.length; i++) {
-        let ingredient = new Ingredient();
-        ingredient.recipeId = recipeId;
-        ingredient.name = ingredients[i].name;
-        ingredient.amount = ingredients[i].amount;
-        ingredient.unit = ingredients[i].unit;
-        ingredientList.push(ingredient);
-    }
-    const result = ingredientsRepo.save(ingredientList);
-    return result;
-}
-
-// insert instruction(s) to database given an ingredient(s) json
-async function insertInstructions(instructions, recipeId) {
-    const instructionRepo = await getInstructionRepository();
-    const instructionList: Instruction[] = [];
-
-    for (let i = 0; i < instructions.length; i++) {
-        let instruction = new Instruction();
-        instruction.recipeId = recipeId;
-        instruction.step = instructions[i].step;
-        instruction.order = instructions[i].order;
-        instructionList.push(instruction);
-    }
-    instructionRepo.save(instructionList);
-}

@@ -37,6 +37,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginComponent } from './pages/login/login.component';
 import { UserInfoComponent } from './pages/user-info/user-info.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
+import { FavoritesComponent } from './pages/favorites/favorites.component';
+import { ListViewComponent } from './pages/list-view/list-view.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { SignUpComponent } from './pages/sign-up/sign-up.component';
     LoginComponent,
     UserInfoComponent,
     SignUpComponent,
+    FavoritesComponent,
+    ListViewComponent,
   ],
   imports: [
     BrowserModule,

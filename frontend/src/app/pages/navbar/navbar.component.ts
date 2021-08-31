@@ -16,14 +16,15 @@ export class NavbarComponent implements OnInit {
   @Output() openNav = new EventEmitter();
 
   constructor(private cookieService: CookieService, private router: Router) {
-    this.currUser = JSON.parse(cookieService.get('User'));
+    if (cookieService.get('User'))
+      this.currUser = JSON.parse(cookieService.get('User'));
   }
 
   ngOnInit(): void {}
 
   // redirect to user page
   navigateToUserPage() {
-    this.router.navigateByUrl(`/user/${this.cookieService.get('User')}`);
+    this.router.navigateByUrl(`/user/${this.currUser?.userId}`);
   }
 
   // log user out
