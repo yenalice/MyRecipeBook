@@ -4,20 +4,19 @@ import * as bodyParser from "body-parser";
 import { router as userRouter } from "./routes/userRoute";
 import { router as recipeRouter } from "./routes/recipeRoute";
 import { router as ingredientRouter } from "./routes/ingredientRoute";
+import { router as nutritionRouter } from "./routes/nutritionRoute";
 
 // TODO:
-// do i need to set up database
-// fill with data from api
-// do i need .env file?
 // set up nodemon
+// something that automatically generates ts --> js?
 // set up JEST
-
 const app = express()
     .use(cors())
     .use(bodyParser.json())
     .use("/user", userRouter)
     .use("/recipe", recipeRouter)
-    .use("/ingredient", ingredientRouter);
+    .use("/ingredient", ingredientRouter)
+    .use("/nutrition", nutritionRouter);
 
 app.listen(4201, (err) => {
     if (err) {
