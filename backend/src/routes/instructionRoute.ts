@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { getIngredientRepository, Ingredient } from "../models/ingredientModel";
+import {
+    getInstructionRepository,
+    Instruction,
+} from "../models/instructionModel";
 
 export const router: Router = Router();
 
@@ -8,9 +11,10 @@ router.get(
     "/:recipeId",
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const repository = await getIngredientRepository();
+            const repository = await getInstructionRepository();
             const instructions = await repository.find({
-                recipeId: req.params.recipeId,
+                order: { order: "ASC" },
+                where: { recipeId: req.params.recipeId },
             });
             res.send(instructions);
         } catch (err) {

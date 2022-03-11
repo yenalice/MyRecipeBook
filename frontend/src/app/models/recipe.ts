@@ -1,7 +1,8 @@
 export interface Recipe {
-  id: number;
-  dateCreated: Date;
+  recipeId: number;
   title: string;
-  imageUrl: string;
   summary?: string;
+  cookTime?: number;
+  dateCreated: Date;
+  imageUrl: string;
 }

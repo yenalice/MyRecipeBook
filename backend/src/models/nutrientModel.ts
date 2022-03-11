@@ -3,19 +3,19 @@ import {
     PrimaryGeneratedColumn,
     Column,
     ManyToOne,
+    JoinColumn,
     createConnection,
     Connection,
     Repository,
-    JoinColumn,
 } from "typeorm";
 import { Recipe } from "./recipeModel";
 
 require("dotenv").config();
 
 @Entity()
-export class Ingredient {
+export class Nutrient {
     @PrimaryGeneratedColumn()
-    ingredientId: number;
+    nutrientId: number;
 
     @ManyToOne((type) => Recipe, (recipe) => recipe.recipeId)
     @JoinColumn({ name: "recipeId", referencedColumnName: "recipeId" })
@@ -29,23 +29,24 @@ export class Ingredient {
 
     @Column()
     unit: string;
+
+    @Column()
+    percentOfDailyNeeds: number;
 }
 
 let connection: Connection;
 
-export async function getIngredientRepository(): Promise<
-    Repository<Ingredient>
-> {
+export async function getNutrientRepository(): Promise<Repository<Nutrient>> {
     if (connection === undefined) {
         connection = await createConnection({
-            name: "ingredientConnection",
+            name: "nutrientConnection",
             type: "mysql",
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
             synchronize: true,
-            entities: [Ingredient, Recipe],
+            entities: [Nutrient, Recipe],
         });
     }
-    return connection.getRepository(Ingredient);
+    return connection.getRepository(Nutrient);
 }

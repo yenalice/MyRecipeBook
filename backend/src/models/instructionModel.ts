@@ -13,39 +13,36 @@ import { Recipe } from "./recipeModel";
 require("dotenv").config();
 
 @Entity()
-export class Ingredient {
+export class Instruction {
     @PrimaryGeneratedColumn()
-    ingredientId: number;
+    instructionId: number;
 
-    @ManyToOne((type) => Recipe, (recipe) => recipe.recipeId)
-    @JoinColumn({ name: "recipeId", referencedColumnName: "recipeId" })
+    @ManyToOne(() => Recipe, (recipe) => recipe.recipeId)
+    @JoinColumn({ name: "recipeId" })
     recipeId: number;
 
     @Column()
-    name: string;
+    step: string;
 
     @Column()
-    amount: number;
-
-    @Column()
-    unit: string;
+    order: number;
 }
 
 let connection: Connection;
 
-export async function getIngredientRepository(): Promise<
-    Repository<Ingredient>
+export async function getInstructionRepository(): Promise<
+    Repository<Instruction>
 > {
     if (connection === undefined) {
         connection = await createConnection({
-            name: "ingredientConnection",
+            name: "instructionConnection",
             type: "mysql",
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
             synchronize: true,
-            entities: [Ingredient, Recipe],
+            entities: [Instruction, Recipe],
         });
     }
-    return connection.getRepository(Ingredient);
+    return connection.getRepository(Instruction);
 }

@@ -1,1 +1,41 @@
-<p>details-page works!</p>
+<div id="details-wrapper" *ngIf="recipe && recipe[0]; else pageNotFound">
+  <!--Title, image, sumary, & cook time-->
+  <h1>{{ recipe[0].title }}</h1>
+  <div id="img-summary-wrapper">
+    <img id="image" src="{{ recipe[0].imageUrl }}" />
+    <p
+      id="summary"
+      *ngIf="recipe[0].summary"
+      [innerHTML]="recipe[0].summary"
+    ></p>
+  </div>
+  <div id="cook-time" *ngIf="recipe[0].cookTime">
+    <h3>{{ "Cook Time: " + formatCookTime(recipe[0].cookTime) }}</h3>
+  </div>
+
+  <!--Ingredients-->
+  <div>
+    <h3>Ingredients</h3>
+    <ul>
+      <li *ngFor="let ingredient of ingredients">
+        {{
+          formatIngredient(ingredient.amount, ingredient.unit, ingredient.name)
+        }}
+      </li>
+    </ul>
+  </div>
+
+  <!--Instructions-->
+  <div>
+    <h3>Instructions</h3>
+    <ol>
+      <li *ngFor="let instruction of instructions">{{ instruction.step }}</li>
+    </ol>
+  </div>
+
+  <!--TODO: comments section-->
+</div>
+
+<ng-template #pageNotFound>
+  <app-page-not-found></app-page-not-found>
+</ng-template>
